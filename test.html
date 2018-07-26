@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <title>hello</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <!-- <link rel="shortcut icon" href="favicon.ico"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 默认使用webkit内核 -->
+    <meta name="renderer" content="webkit">
+    <!-- 兼容模式 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link href="" rel="stylesheet">
+    <style></style>
+  </head>
+
+  <body>
+    <div id="app">
+      {{name}}
+      <hr> {{info.age}}
+      <hr>
+      <div>{{info.name}}</div>
+      <input type="text" v-model="info.name">
+      <button v-on:click='change'>change</button>
+      <div v-text='info.name'></div>
+    </div>
+    <script src="./svue.js"></script>
+    <script>
+      var vm = new SVue({
+        el: '#app',
+        data: {
+          name: '愚蠢的名字',
+          info: {
+            age: 250,
+            name: '响亮的名字'
+          },
+          rand: ['道生一', '一生二', '二生三', '三生万物']
+        },
+        methods: {
+          change: function () {
+            let index = Math.floor(Math.random() * this.rand.length);
+            this.name = this.rand[index];
+            this.info.name = '脱壳';
+          }
+        }
+      })
+    </script>
+  </body>
+
+</html>
