@@ -1,5 +1,5 @@
 class Vue {
-    constructor(options = {}) {
+    constructor(options = {}) {//数据的初始化
         this.$el = document.querySelector(options.el);
         let data = this.data = options.data;
         // 代理data，使其能直接this.xxx的方式访问data，正常的话需要this.data.xxx
@@ -11,11 +11,11 @@ class Vue {
         this.observer(data); // 初始化劫持监听所有数据
         this.compile(this.$el); // 解析dom
     }
-    proxyData(key) {
+    proxyData(key) {//数据代理
         let that = this;
         Object.defineProperty(that, key, {
-            configurable: false,
-            enumerable: true,
+            configurable: false, // 不能再define
+            enumerable: true,// 可枚举
             get() {
                 return that.data[key];
             },
@@ -24,7 +24,7 @@ class Vue {
             }
         });
     }
-    observer(data) {
+    observer(data) {//劫持监听所有数据
         let that = this
         Object.keys(data).forEach(key => {
             let value = data[key]
@@ -46,7 +46,7 @@ class Vue {
             })
         })
     }
-    compile(el) {
+    compile(el) {//解析dom
         var nodes = el.childNodes;
         for (let i = 0; i < nodes.length; i++) {
             const node = nodes[i];
@@ -84,7 +84,7 @@ class Vue {
             }
         }
     }
-    compileText(node, type) {
+    compileText(node, type) {//解析dom里处理纯双花括号的操作
         let reg = /\{\{(.*?)\}\}/g, txt = node.textContent;
         if (reg.test(txt)) {
             node.textContent = txt.replace(reg, (matched, value) => {
@@ -104,7 +104,7 @@ class Vue {
     }
 }
 
-class Watcher {
+class Watcher {//更新视图操作
     constructor(el, vm, value, type) {
         this.el = el;
         this.vm = vm;
