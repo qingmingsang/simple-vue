@@ -11,7 +11,8 @@ class Vue {
         this.observer(data); // 初始化劫持监听所有数据
         this.compile(this.$el); // 解析dom
     }
-    proxyData(key) {//数据代理
+    proxyData(key) {
+        //上面主要是代理data到最上层，this.xxx的方式直接访问data
         let that = this;
         Object.defineProperty(that, key, {
             configurable: false, // 不能再define
@@ -24,7 +25,10 @@ class Vue {
             }
         });
     }
-    observer(data) {//劫持监听所有数据
+    observer(data) {
+        //劫持监听所有数据
+        //同样是使用Object.defineProperty来监听数据，初始化需要订阅的数据。 
+        //把需要订阅的数据到push到watcherTask里，等到时候需要更新的时候就可以批量更新数据了。
         let that = this
         Object.keys(data).forEach(key => {
             let value = data[key]
@@ -38,6 +42,7 @@ class Vue {
                 set(newValue) {
                     if (newValue !== value) {
                         value = newValue
+                        //遍历订阅池，批量更新视图。
                         that.watcherTask[key].forEach(task => {
                             task.update()
                         })
@@ -46,15 +51,18 @@ class Vue {
             })
         })
     }
-    compile(el) {//解析dom
+    compile(el) {
+        //解析dom
         var nodes = el.childNodes;
         for (let i = 0; i < nodes.length; i++) {
             const node = nodes[i];
             if (node.nodeType === 3) {
+                //当前元素是文本节点
                 var text = node.textContent.trim();
                 if (!text) continue;
                 this.compileText(node, 'textContent')
             } else if (node.nodeType === 1) {
+                //当前元素是元素节点
                 if (node.childNodes.length > 0) {
                     this.compile(node)
                 }
@@ -69,6 +77,8 @@ class Vue {
                     })())
                 }
                 if (node.hasAttribute('v-html')) {
+                    //首先判断node节点上是否有v-html这种指令，如果存在的话，我们就发布订阅
+                    //只需要把当前需要订阅的数据push到watcherTask里面，然后到时候在设置值的时候就可以批量更新了，实现双向数据绑定
                     let attrVal = node.getAttribute('v-html');
                     this.watcherTask[attrVal].push(new Watcher(node, this, attrVal, 'innerHTML'))
                     node.removeAttribute('v-html')
