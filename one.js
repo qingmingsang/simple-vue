@@ -79,6 +79,8 @@ class Vue {
                 if (node.hasAttribute('v-html')) {
                     //首先判断node节点上是否有v-html这种指令，如果存在的话，我们就发布订阅
                     //只需要把当前需要订阅的数据push到watcherTask里面，然后到时候在设置值的时候就可以批量更新了，实现双向数据绑定
+                    //然后push的值是一个Watcher的实例，首先他new的时候会先执行一次，执行的操作就是去把 纯双花括号 -> 1 ，也就是说把我们写好的模板数据更新到模板视图上。 
+                    //最后把当前元素属性剔除出去，我们用Vue的时候也是看不到这种指令的，不剔除也不影响
                     let attrVal = node.getAttribute('v-html');
                     this.watcherTask[attrVal].push(new Watcher(node, this, attrVal, 'innerHTML'))
                     node.removeAttribute('v-html')
@@ -116,6 +118,7 @@ class Vue {
 
 class Watcher {//更新视图操作
     constructor(el, vm, value, type) {
+        //之前发布订阅之后走了这里面的操作，意思就是把当前元素如：node.innerHTML = '这是data里面的值'、node.value = '这个是表单的数据'
         this.el = el;
         this.vm = vm;
         this.value = value;
