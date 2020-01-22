@@ -10,9 +10,34 @@
 </head>
 
 <body>
-
+    <div id="app">
+        <form>
+            <input type="text" v-model="number">
+            <button type="button" v-click="increment">增加</button>
+        </form>
+        <h3 v-bind="number"></h3>
+    </div>
     <script>
-
+        var app = new myVue({
+            el: '#app',
+            data: {
+                number: 0
+            },
+            methods: {
+                increment: function () {
+                    this.number++;
+                },
+            }
+        });
+        function myVue(options) {
+            this._init(options);
+        }
+        myVue.prototype._init = function (options) {
+            this.$options = options;  // options 为上面使用时传入的结构体，包括el,data,methods
+            this.$el = document.querySelector(options.el); // el是 #app, this.$el是id为app的Element元素
+            this.$data = options.data; // this.$data = {number: 0}
+            this.$methods = options.methods;  // this.$methods = {increment: function(){}}
+        }
     </script>
 </body>
 

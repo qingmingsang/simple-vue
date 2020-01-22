@@ -18,8 +18,9 @@ Vue的双向数据绑定的原理相信大家也都十分了解了，主要是�
 1. 一个input，使用v-model指令
 2. 一个button，使用v-click指令
 3. 一个h3，使用v-bind指令。
-我们最后会通过类似于vue的方式来使用我们的双向数据绑定，结合我们的数据结构添加注释
 
+我们最后会通过类似于vue的方式来使用我们的双向数据绑定，结合我们的数据结构添加注释
+```
 var app = new myVue({
       el:'#app',
       data: {
@@ -31,13 +32,15 @@ var app = new myVue({
         },
       }
     })
+```
 首先我们需要定义一个myVue构造函数：
-
+```
 function myVue(options) {
   
 }
+```
 为了初始化这个构造函数，给它添加一 个_init属性
-
+```
 function myVue(options) {
   this._init(options);
 }
@@ -47,10 +50,11 @@ myVue.prototype._init = function (options) {
     this.$data = options.data; // this.$data = {number: 0}
     this.$methods = options.methods;  // this.$methods = {increment: function(){}}
   }
+```
 接下来实现_obverse函数，对data进行处理，重写data的set和get函数
 
 并改造_init函数
-
+```
  myVue.prototype._obverse = function (obj) { // obj = {number: 0}
     var value;
     for (key in obj) {  //遍历obj对象
@@ -85,6 +89,7 @@ myVue.prototype._init = function (options) {
    
     this._obverse(this.$data);
   }
+```
 接下来我们写一个指令类Watcher，用来绑定更新函数，实现对DOM元素的更新
 
 function Watcher(name, el, vm, exp, attr) {
@@ -345,4 +350,3 @@ myVue.prototype._complie = function (root) { root 为 id为app的Element元素�
     })
   }
 </script>
-如果喜欢请关注我的Github，给个Star吧，我会定期分享一些JS中的知识，^_^
