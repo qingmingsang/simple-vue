@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MyVue</title>
+</head>
+
+<body>
+    <div>
+        <input type="text" id="input-msg">
+        <p id="output-msg"></p>
+    </div>
+
+    <script>
+        var inputMsg = document.getElementById('input-msg'),
+            outputMsg = document.getElementById('output-msg');
+
+        var obj = {
+            msg: 'hello'
+        };
+
+        var key = 'msg';
+
+        var val = obj[key];
+
+
+        Object.defineProperty(obj, key, {
+            enumerable: true,
+            configurable: true,
+            set: function (newValue) {
+                val = newValue;
+
+                outputMsg.innerText = obj[key];
+            },
+
+            get: function () {
+                console.log('getter');
+                return val;
+            }
+        });
+
+        /* 
+        通过监听input的input事件来去改变obj[key]的值，使obj[key]的值始终等于用户输入的值，
+        当obj[key]的值因为用户的输入而发生了改变的时候，会激活Object.defineProperty中的setter事件，
+        然后我们获取到最新的obj[key]的值并把它赋值给outputMsg。
+        这样当我们在input中进行输入的时候，<p>中的值也会跟随我们的输入变化。
+         这种通过Object.defineProperty来监听数据变化的方式就是Vue中数据响应的核心思想。
+        */
+        inputMsg.addEventListener('input', function (event) {
+            var newVal = event.target.value;
+            obj[key] = newVal;
+        });
+    </script>
+</body>
+
+</html>
