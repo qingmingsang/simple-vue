@@ -15,9 +15,20 @@
             <p>{{msg}}</p>
         </div>
     </div>
-
+    <script src="./patch.js"></script>
+    <script src="./dep.js"></script>
+    <script src="./directive.js"></script>
+    <script src="./watcher.js"></script>
+    <script src="./observer.js"></script>
+    <script src="./compile.js"></script>
+    <script src="./mvue.js"></script>
     <script>
-
+        var vm = new MVue({
+            el: '#app',
+            data: {
+                msg: 'hello'
+            }
+        });
     </script>
 </body>
 
